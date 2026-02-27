@@ -1,82 +1,101 @@
-﻿# FlexTask Suite
+Task Management System
 
-This is a personal workflow manager built with the MERN stack.
+This is a full-stack Task Management System built using the MERN stack.
+I created this project to practice authentication, protected routes, and full CRUD operations in a real-world style application.
 
-I developed this to handle daily task tracking with user-based data isolation. It features a custom backend for identity management and a React-based frontend for the dashboard.
+The app allows users to create an account, log in securely, and manage their personal tasks. Each user can only see and manage their own tasks.
 
-## What the app does
+What This App Can Do
 
-- User registration and login with JWT
-- Create, view, update, and delete tasks
-- Filter tasks by status (`pending` / `completed`)
-- Logout and protected dashboard route
-- Extra website pages with navbar (`Home`, `Features`, `About`, `Contact`)
+User registration and login
 
-## Tech stack
+Secure authentication using JWT
 
-- Backend: Node.js, Express, MongoDB, Mongoose, JWT
-- Frontend: React (Vite), React Router, Axios
+Protected dashboard route
 
-## API routes
+Create, view, update, and delete tasks
 
-### User Data
-- `POST /v1/auth/register`
-- `POST /v1/auth/login`
+Filter tasks by status (Pending / Completed)
 
-### Content Workspace (protected)
-- `POST /v1/tasks`
-- `GET /v1/tasks`
-- `PUT /v1/tasks/:id`
-- `DELETE /v1/tasks/:id`
+Logout functionality
 
-## Project folders
+Additional pages like Home, Features, About, and Contact
 
-- `backend` - API, models, controllers, middleware
-- `frontend` - React UI
+Tech Stack Used
 
-## How to run
+Backend:
 
-### Option 1: Run from root (recommended)
+Node.js
 
-```bash
-npm install
-npm run install:all
-npm run dev
-```
+Express.js
 
-### Option 2: Run separately
+MongoDB
 
-Backend terminal:
+Mongoose
 
-```bash
-cd backend
-npm install
-copy .env.example .env
-npm run dev
-```
+JWT
 
-Frontend terminal:
+Frontend:
 
-```bash
-cd frontend
-npm install
-copy .env.example .env
-npm start
-```
+React (Vite)
 
-## Environment setup
+React Router
 
-In `backend/.env` set:
+Axios
 
-- `MONGO_URI`
-- `JWT_SECRET`
-- `PORT` (optional, default 5000)
+Project Structure
 
-In `frontend/.env` set:
+The project has one main folder with two subfolders:
 
-- `VITE_API_BASE_URL` (default `http://localhost:5000/v1`)
+backend → Contains API logic, models, controllers, and middleware
 
-## Notes
+frontend → Contains the React user interface
 
-- If port `5000` is already in use, backend will move to the next free port.
-- Frontend usually runs on `http://localhost:5173` (or another free Vite port).
+This separation keeps the project clean and organized.
+
+How To Run The Project
+
+You can either run the entire project from the root folder or run backend and frontend separately.
+
+Make sure:
+
+MongoDB is running (or use MongoDB Atlas)
+
+Environment variables are properly configured
+
+Dependencies are installed in both folders
+
+The backend usually runs on port 5000.
+The frontend usually runs on port 5173.
+
+If port 5000 is already in use, the backend automatically switches to the next available port.
+
+Environment Setup
+
+Backend requires:
+
+MongoDB connection string
+
+JWT secret key
+
+Optional port number
+
+Frontend requires:
+
+API base URL (usually pointing to the backend server)
+
+Purpose of This Project
+
+This project helped me understand:
+
+How authentication works in real applications
+
+How to protect API routes
+
+How frontend and backend communicate
+
+How to structure a full-stack MERN project
+
+Author
+
+Satyam Saurabh

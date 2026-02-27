@@ -2,12 +2,22 @@
 
 export const AuthContext = createContext(null);
 
+const safeParseUser = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch (_error) {
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [user, setUser] = useState(() => {
-    const userRaw = localStorage.getItem("user");
-    return userRaw ? JSON.parse(userRaw) : null;
-  });
+  const [user, setUser] = useState(() => safeParseUser(localStorage.getItem("user")));
 
   const login = (nextToken, nextUser) => {
     localStorage.setItem("token", nextToken);

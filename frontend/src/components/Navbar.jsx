@@ -17,9 +17,9 @@ const Navbar = ({ token, user, onLogout }) => {
 
   return (
     <header className="site-header">
-      <nav className="navbar container">
-        <Link to="/" className="brand" onClick={closeMenu}>
-          TaskForge
+      <nav className="navbar view-box">
+        <Link to="/" className="brand" onClick={closeMenu} style={{ letterSpacing: "1px" }}>
+          FlexTask
         </Link>
 
         <button

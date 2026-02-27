@@ -2,13 +2,13 @@
 
 const HomePage = () => {
   return (
-    <section className="container page-wrap">
+    <section className="view-box page-wrap">
       <div className="hero-grid">
         <article className="hero-card">
-          <p className="eyebrow">MERN Productivity Suite</p>
-          <h1>Plan faster. Ship cleaner. Stay focused.</h1>
+          <p className="eyebrow">Personal Workflow Tool</p>
+          <h1>Organize. Track. Complete.</h1>
           <p>
-            TaskForge gives your team a clear system to track tasks, manage statuses, and deliver work with confidence.
+            FlexTask helps you maintain a clear view of your daily work, enabling better focus and faster delivery.
           </p>
           <div className="hero-actions">
             <Link to="/register" className="btn btn-primary">

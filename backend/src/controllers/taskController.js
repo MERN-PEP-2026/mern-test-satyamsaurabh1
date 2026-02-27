@@ -1,13 +1,15 @@
 ﻿const Task = require("../models/Task");
 
-const ALLOWED_STATUS = new Set(["pending", "completed"]);
+// just the basics for now
+const statusKinds = ["pending", "completed"];
 
-const normalizeTitle = (value = "") => value.trim();
-const normalizeDescription = (value = "") => value.trim();
+const fixTitle = (val = "") => val.trim();
+const fixDesc = (val = "") => val.trim();
 
-const buildTaskFilter = (userId, status) => {
+const getFilter = (userId, status) => {
   const filter = { createdBy: String(userId) };
-  if (ALLOWED_STATUS.has(status)) {
+  // check if status is actually valid
+  if (statusKinds.includes(status)) {
     filter.status = status;
   }
   return filter;
@@ -15,16 +17,19 @@ const buildTaskFilter = (userId, status) => {
 
 const createTask = async (req, res) => {
   const { title, description = "", status } = req.body;
-  const taskTitle = normalizeTitle(title);
+  const taskTitle = fixTitle(title);
 
   if (!taskTitle) {
     return res.status(400).json({ message: "title is required" });
   }
 
+  // default to pending if something weird happens
+  const taskStatus = statusKinds.includes(status) ? status : "pending";
+
   const task = await Task.create({
     title: taskTitle,
-    description: normalizeDescription(description),
-    status: ALLOWED_STATUS.has(status) ? status : "pending",
+    description: fixDesc(description),
+    status: taskStatus,
     createdBy: String(req.user._id),
   });
 
@@ -32,7 +37,7 @@ const createTask = async (req, res) => {
 };
 
 const getTasks = async (req, res) => {
-  const tasks = await Task.find(buildTaskFilter(req.user._id, req.query.status)).sort({ createdAt: -1 });
+  const tasks = await Task.find(getFilter(req.user._id, req.query.status)).sort({ createdAt: -1 });
   return res.json(tasks);
 };
 
@@ -45,17 +50,18 @@ const updateTask = async (req, res) => {
   }
 
   if (req.body.title !== undefined) {
-    task.title = normalizeTitle(req.body.title);
+    task.title = fixTitle(req.body.title);
   }
 
   if (req.body.description !== undefined) {
-    task.description = normalizeDescription(req.body.description);
+    task.description = fixDesc(req.body.description);
   }
 
-  if (ALLOWED_STATUS.has(req.body.status)) {
+  if (statusKinds.includes(req.body.status)) {
     task.status = req.body.status;
   }
 
+  // actual save op
   const savedTask = await task.save();
   return res.json(savedTask);
 };

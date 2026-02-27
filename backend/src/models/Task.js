@@ -16,6 +16,11 @@ const taskSchema = new mongoose.Schema({
     enum: ["pending", "completed"],
     default: "pending",
   },
+  // maybe move old tasks here?
+  archived: {
+    type: Boolean,
+    default: false,
+  },
   createdBy: {
     type: String,
     required: true,

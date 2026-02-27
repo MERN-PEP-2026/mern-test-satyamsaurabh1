@@ -1,6 +1,6 @@
 ﻿import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api";
+import http from "../client";
 import { AuthContext } from "../context/AuthContext";
 
 const LoginPage = () => {
@@ -20,7 +20,7 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await api.post("/auth/login", formData);
+      const response = await http.post("/auth/login", formData);
       login(response.data.token, response.data.user);
       navigate("/dashboard");
     } catch (err) {
@@ -31,7 +31,7 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="container page-wrap auth-wrap">
+    <section className="view-box page-wrap auth-wrap">
       <article className="panel auth-panel">
         <h1>Welcome Back</h1>
         <p className="subtitle">Login to continue your task workflow.</p>

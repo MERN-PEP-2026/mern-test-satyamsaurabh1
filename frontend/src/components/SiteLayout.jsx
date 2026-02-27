@@ -8,10 +8,10 @@ const SiteLayout = ({ children }) => {
   return (
     <div className="site-shell">
       <Navbar token={token} user={user} onLogout={logout} />
-      <main className="site-main">{children}</main>
+      <main className="app-body">{children}</main>
       <footer className="site-footer">
-        <div className="container footer-inner">
-          <p>TaskForge Task Management Platform</p>
+        <div className="view-box footer-inner">
+          <p>FlexTask Unified Platform</p>
           <p>Built with MERN</p>
         </div>
       </footer>

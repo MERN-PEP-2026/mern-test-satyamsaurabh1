@@ -1,8 +1,8 @@
-﻿# Task Management System
+﻿# FlexTask Suite
 
-This is my MERN task manager project.
+This is a personal workflow manager built with the MERN stack.
 
-I built it as a full-stack app with login/register, protected task APIs, and a React dashboard where each user can manage only their own tasks.
+I developed this to handle daily task tracking with user-based data isolation. It features a custom backend for identity management and a React-based frontend for the dashboard.
 
 ## What the app does
 
@@ -19,15 +19,15 @@ I built it as a full-stack app with login/register, protected task APIs, and a R
 
 ## API routes
 
-### Auth
-- `POST /api/auth/register`
-- `POST /api/auth/login`
+### User Data
+- `POST /v1/auth/register`
+- `POST /v1/auth/login`
 
-### Tasks (protected)
-- `POST /api/tasks`
-- `GET /api/tasks`
-- `PUT /api/tasks/:id`
-- `DELETE /api/tasks/:id`
+### Content Workspace (protected)
+- `POST /v1/tasks`
+- `GET /v1/tasks`
+- `PUT /v1/tasks/:id`
+- `DELETE /v1/tasks/:id`
 
 ## Project folders
 
@@ -74,7 +74,7 @@ In `backend/.env` set:
 
 In `frontend/.env` set:
 
-- `VITE_API_BASE_URL` (default `http://localhost:5000/api`)
+- `VITE_API_BASE_URL` (default `http://localhost:5000/v1`)
 
 ## Notes
 

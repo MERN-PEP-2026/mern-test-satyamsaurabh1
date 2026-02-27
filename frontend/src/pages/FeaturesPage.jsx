@@ -1,6 +1,6 @@
 ﻿const FeaturesPage = () => {
   return (
-    <section className="container page-wrap">
+    <section className="view-box page-wrap">
       <h1>Features</h1>
       <p className="subtitle">Everything required to run a task workflow from one interface.</p>
       <div className="feature-grid">

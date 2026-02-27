@@ -1,5 +1,5 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
-import api from "../api";
+import http from "../client";
 
 const EMPTY_TASK_FORM = { title: "", description: "" };
 
@@ -16,7 +16,7 @@ const DashboardPage = () => {
 
     try {
       const query = nextStatus !== "all" ? `?status=${nextStatus}` : "";
-      const { data } = await api.get(`/tasks${query}`);
+      const { data } = await http.get(`/tasks${query}`);
       setTasks(data);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Could not load tasks");
@@ -48,7 +48,7 @@ const DashboardPage = () => {
     }
 
     try {
-      await api.post("/tasks", payload);
+      await http.post("/tasks", payload);
       setTaskForm(EMPTY_TASK_FORM);
       loadTasks();
     } catch (error) {
@@ -60,7 +60,7 @@ const DashboardPage = () => {
     const nextStatus = task.status === "pending" ? "completed" : "pending";
 
     try {
-      await api.put(`/tasks/${task._id}`, { status: nextStatus });
+      await http.put(`/tasks/${task._id}`, { status: nextStatus });
       loadTasks();
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Could not update task");
@@ -69,7 +69,7 @@ const DashboardPage = () => {
 
   const removeTask = async (taskId) => {
     try {
-      await api.delete(`/tasks/${taskId}`);
+      await http.delete(`/tasks/${taskId}`);
       loadTasks();
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Could not delete task");
@@ -89,7 +89,7 @@ const DashboardPage = () => {
   }, [tasks]);
 
   return (
-    <section className="container page-wrap">
+    <section className="view-box page-wrap">
       <article className="panel">
         <header className="dashboard-header">
           <div>

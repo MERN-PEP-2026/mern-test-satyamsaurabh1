@@ -6,10 +6,12 @@ const validateObjectId = require("../middleware/validateObjectId");
 
 const router = express.Router();
 
-router.route("/").post(protect, asyncHandler(createTask)).get(protect, asyncHandler(getTasks));
-router
-  .route("/:id")
-  .put(protect, validateObjectId, asyncHandler(updateTask))
-  .delete(protect, validateObjectId, asyncHandler(deleteTask));
+// Get all tasks or make a new one
+router.get("/", protect, asyncHandler(getTasks));
+router.post("/", protect, asyncHandler(createTask));
+
+// Single task operations
+router.put("/:id", protect, validateObjectId, asyncHandler(updateTask));
+router.delete("/:id", protect, validateObjectId, asyncHandler(deleteTask));
 
 module.exports = router;

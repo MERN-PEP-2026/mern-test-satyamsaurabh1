@@ -17,23 +17,33 @@ const safeParseUser = (value) => {
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [user, setUser] = useState(() => safeParseUser(localStorage.getItem("user")));
+  const [user, setUser] = useState(() => {
+    // try to get user data from storage on init
+    const saved = localStorage.getItem("user");
+    return safeParseUser(saved);
+  });
 
   const login = (nextToken, nextUser) => {
+    // update storage first
     localStorage.setItem("token", nextToken);
     localStorage.setItem("user", JSON.stringify(nextUser));
+
+    // then update state
     setToken(nextToken);
     setUser(nextUser);
   };
 
   const logout = () => {
+    console.log("performing user logout...");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setToken("");
     setUser(null);
   };
 
-  const value = useMemo(() => ({ token, user, login, logout }), [token, user]);
+  const value = useMemo(() => {
+    return { token, user, login, logout };
+  }, [token, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

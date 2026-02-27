@@ -1,5 +1,7 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+﻿/* Main font from google */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
 
+/* Global color tokens */
 :root {
   --bg: #fff8ef;
   --ink: #192231;
@@ -36,11 +38,13 @@ a {
   flex-direction: column;
 }
 
-.site-main {
+.app-body {
   flex: 1;
+  /* temporary fix for footer overlap on some screens */
+  min-height: calc(100vh - 160px);
 }
 
-.container {
+.view-box {
   width: min(1100px, 92vw);
   margin: 0 auto;
 }
@@ -299,6 +303,7 @@ button:hover,
 }
 
 @media (max-width: 900px) {
+
   .hero-grid,
   .feature-grid,
   .inline-form {

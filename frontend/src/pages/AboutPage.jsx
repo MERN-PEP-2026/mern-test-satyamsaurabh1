@@ -1,10 +1,10 @@
 ﻿const AboutPage = () => {
   return (
-    <section className="container page-wrap narrow">
-      <h1>About TaskForge</h1>
+    <section className="view-box page-wrap narrow">
+      <h1>About FlexTask</h1>
       <p>
-        TaskForge is a full-stack project designed to demonstrate production-style MERN architecture: reusable routing,
-        clear controller boundaries, protected APIs, and stateful React pages.
+        FlexTask is a modular task manager created to explore scalable MERN patterns. It focuses on clean
+        service boundaries and secure data handling for individual users.
       </p>
       <p>
         The platform is intentionally simple and focused. It solves the most important workflow first: assigning,

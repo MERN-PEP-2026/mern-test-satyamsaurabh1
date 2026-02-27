@@ -1,6 +1,6 @@
 ﻿const ContactPage = () => {
   return (
-    <section className="container page-wrap narrow">
+    <section className="view-box page-wrap narrow">
       <h1>Contact</h1>
       <p className="subtitle">Send project feedback or enhancement requests.</p>
 

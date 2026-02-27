@@ -1,70 +1,92 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../api";
+
+const EMPTY_TASK_FORM = { title: "", description: "" };
 
 const DashboardPage = () => {
   const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("all");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [taskForm, setTaskForm] = useState({ title: "", description: "" });
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [taskForm, setTaskForm] = useState(EMPTY_TASK_FORM);
 
-  const fetchTasks = async (statusValue = filter) => {
-    setLoading(true);
-    setError("");
+  const loadTasks = useCallback(async (nextStatus = statusFilter) => {
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      const query = statusValue !== "all" ? `?status=${statusValue}` : "";
-      const response = await api.get(`/tasks${query}`);
-      setTasks(response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to load tasks");
+      const query = nextStatus !== "all" ? `?status=${nextStatus}` : "";
+      const { data } = await api.get(`/tasks${query}`);
+      setTasks(data);
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Could not load tasks");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
+  }, [statusFilter]);
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    loadTasks();
+  }, [loadTasks]);
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    setTaskForm((previous) => ({ ...previous, [name]: value }));
+  };
 
   const handleCreateTask = async (event) => {
     event.preventDefault();
-    if (!taskForm.title.trim()) {
+
+    const payload = {
+      title: taskForm.title.trim(),
+      description: taskForm.description.trim(),
+      status: "pending",
+    };
+
+    if (!payload.title) {
       return;
     }
 
     try {
-      await api.post("/tasks", { ...taskForm, status: "pending" });
-      setTaskForm({ title: "", description: "" });
-      fetchTasks();
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to create task");
+      await api.post("/tasks", payload);
+      setTaskForm(EMPTY_TASK_FORM);
+      loadTasks();
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Could not create task");
     }
   };
 
-  const handleStatusToggle = async (task) => {
+  const toggleStatus = async (task) => {
     const nextStatus = task.status === "pending" ? "completed" : "pending";
+
     try {
       await api.put(`/tasks/${task._id}`, { status: nextStatus });
-      fetchTasks();
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to update task");
+      loadTasks();
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Could not update task");
     }
   };
 
-  const handleDeleteTask = async (taskId) => {
+  const removeTask = async (taskId) => {
     try {
       await api.delete(`/tasks/${taskId}`);
-      fetchTasks();
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete task");
+      loadTasks();
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || "Could not delete task");
     }
   };
 
   const handleFilterChange = (event) => {
-    const nextFilter = event.target.value;
-    setFilter(nextFilter);
-    fetchTasks(nextFilter);
+    const nextStatus = event.target.value;
+    setStatusFilter(nextStatus);
+    loadTasks(nextStatus);
   };
+
+  const taskSummary = useMemo(() => {
+    const completed = tasks.filter((task) => task.status === "completed").length;
+    const pending = tasks.length - completed;
+    return { total: tasks.length, completed, pending };
+  }, [tasks]);
 
   return (
     <section className="container page-wrap">
@@ -75,6 +97,11 @@ const DashboardPage = () => {
             <h1>Dashboard</h1>
             <p className="subtitle">Create and manage your tasks.</p>
           </div>
+          <div>
+            <small>
+              Total: {taskSummary.total} | Pending: {taskSummary.pending} | Completed: {taskSummary.completed}
+            </small>
+          </div>
         </header>
 
         <form onSubmit={handleCreateTask} className="form inline-form">
@@ -82,29 +109,29 @@ const DashboardPage = () => {
             name="title"
             placeholder="Task title"
             value={taskForm.title}
-            onChange={(e) => setTaskForm((prev) => ({ ...prev, title: e.target.value }))}
+            onChange={handleFormChange}
             required
           />
           <input
             name="description"
             placeholder="Description"
             value={taskForm.description}
-            onChange={(e) => setTaskForm((prev) => ({ ...prev, description: e.target.value }))}
+            onChange={handleFormChange}
           />
           <button className="btn btn-primary" type="submit">Add Task</button>
         </form>
 
         <div className="filter-row">
           <label htmlFor="status-filter">Filter:</label>
-          <select id="status-filter" value={filter} onChange={handleFilterChange}>
+          <select id="status-filter" value={statusFilter} onChange={handleFilterChange}>
             <option value="all">All</option>
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
           </select>
         </div>
 
-        {error ? <p className="error">{error}</p> : null}
-        {loading ? <p>Loading tasks...</p> : null}
+        {errorMessage ? <p className="error">{errorMessage}</p> : null}
+        {isLoading ? <p>Loading tasks...</p> : null}
 
         <ul className="task-list">
           {tasks.map((task) => (
@@ -115,10 +142,10 @@ const DashboardPage = () => {
                 <small>Status: {task.status}</small>
               </div>
               <div className="task-actions">
-                <button className="btn btn-outline" type="button" onClick={() => handleStatusToggle(task)}>
+                <button className="btn btn-outline" type="button" onClick={() => toggleStatus(task)}>
                   Mark {task.status === "pending" ? "Completed" : "Pending"}
                 </button>
-                <button className="btn btn-danger" type="button" onClick={() => handleDeleteTask(task._id)}>
+                <button className="btn btn-danger" type="button" onClick={() => removeTask(task._id)}>
                   Delete
                 </button>
               </div>
